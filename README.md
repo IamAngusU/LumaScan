@@ -51,7 +51,7 @@ The desktop reference client supports explicit server folders or File System Acc
 
 ## Backend integration and verification
 
-The API is the product surface; the clients are examples. See [API contract](docs/api.md), `/docs`, and `/openapi.json`. A session-bound, expiring phone credential cannot list other collections, read archive files, change the PC's destinations or obtain an admin token. Pairing codes are single-use and expire after ten minutes. Device credentials expire after a day or on server restart. Re-pairing never loses completed jobs. ContextBridge resource discovery can use `resource-pack.json` and stable ID `iamangusu.lumascan`.
+The API is the product surface; the clients are examples. See [API contract](docs/api.md), the self-hosted reference at `/api.html` (also `/docs` after starting this version), and `/openapi.json`. No CDN is needed. A session-bound, expiring phone credential cannot list other collections, read archive files, change the PC's destinations or obtain an admin token. Pairing codes are single-use and expire after ten minutes. Device credentials expire after a day or on server restart. Re-pairing never loses completed jobs. ContextBridge resource discovery can use `resource-pack.json` and stable ID `iamangusu.lumascan`.
 
 ```sh
 python -m pytest -q
