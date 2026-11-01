@@ -1,0 +1,20 @@
+{
+  "schema": "lumascan.models.v1",
+  "docaligner": {
+    "upstream": "https://github.com/DocsaidLab/DocAligner",
+    "version": "1.1.1",
+    "url": "https://github.com/DocsaidLab/DocAligner/releases/download/1.1.1/lcnet100_h_e_bifpn_256_fp32.onnx",
+    "sha256": "f4117b786e3a18470f3865c93f3c2bd69d9b998edd60f385574a5c665e79594e",
+    "license": "Apache-2.0",
+    "purpose": "Single-document corner candidate; multi-item scene uses OpenCV",
+    "redistributed": false
+  },
+  "ocr": {
+    "upstream": "https://github.com/RapidAI/RapidOCR",
+    "version": "3.9.2",
+    "license": "Apache-2.0",
+    "purpose": "PP-OCRv6 text and line orientation",
+    "weights_source": "Pinned rapidocr wheel, verified by SHA-256 in digitize_ocr_worker.py",
+    "redistributed": false
+  }
+}

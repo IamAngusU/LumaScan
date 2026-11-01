@@ -1,0 +1,1 @@
+{"schema_version":1,"id":"iamangusu.lumascan","name":"LumaScan","version":"0.1.0","kind":"local-document-scanner","root_relative_path":"LumaScan","endpoints":[{"id":"control-api","type":"service","url":"http://127.0.0.1:8772","health_path":"/healthz","capabilities":["tools","vision","image","retrieval"]}]}

@@ -1,0 +1,21 @@
+# Backend contract v1
+
+Obtain the admin bearer token with `GET /api/bootstrap` from loopback. It is unavailable from LAN clients. Every administrative endpoint uses this bearer token. The archive API deliberately keeps its existing `/api/digitize` prefix to ease client migration.
+
+Create a collection with `POST /api/digitize/sessions` and `{"name":"Family album"}`. Set subsequent-capture defaults with `PATCH /api/digitize/sessions/{sid}/settings`: `destination`, `mode` (`original`, `photo`, `mono`, `gray`, `document`), `ocr`, `orient`, `min_side` (64–4000 pixels). The recommended initial minimum is 900 pixels on the crop's short side. A server destination is registered by `POST /api/digitize/destinations` with an absolute `path`, only from the server computer.
+
+Create phone pairing with `POST /api/digitize/sessions/{sid}/pair`. This returns the phone URL, a QR data URL and its lifetime. The URL fragment is a one-time credential: keep it out of application logs. The phone redeems it at `POST /api/pair/claim` with `{"code":"..."}` and receives its scoped device bearer token. This token is never an admin credential.
+
+The phone posts a JPEG/PNG preview (at most 2 MB / 2 megapixels) as multipart `file` to `POST /api/device/preview`. It receives `state`, `progress`, optional `detection` and the collection's `saved_items` count. States are `empty`, `moving`, `focus`, `steady`, `capture`, `processing`, `review`, `error`, `saved`. Only `capture` includes `intent_id`; the server creates it after stable content. For a manual shutter, request `POST /api/device/intent` instead. Settings are frozen when the intent is created.
+
+Upload the original to `POST /api/device/capture`, with multipart fields `file`, `intent_id` and `source` (`camera-original`, `video-frame`, `library`). Maximum file size is 32 MB. HTTP 202 confirms durable original acceptance and queueing. It does **not** authorize a green check. Poll `GET /api/device/state` or continue posting preview frames.
+
+The authoritative `receipt` has `state` (`processing`, `saved`, `review`, `error`) and `complete`. During processing it includes `stage` and fractional `progress`. On `review`, it includes machine-readable `reasons`. On error it contains `message`. Only `complete: true` authorizes a green check and incremented saved-item counter. A deliberate `POST /api/device/review` accepts quality review; it cannot waive an unfinished or failed destination export. `POST /api/device/retry` retries a failed processing job from its retained original. `DELETE /api/device` revokes this phone.
+
+Administrative upload: `POST /api/digitize/sessions/{sid}/capture`, multipart `file` plus JSON-string `options`. An optional caller-supplied `request_id` is 32 lowercase hex characters. `quads` is a list of four-point crops in original-image pixels; use `detect:false` with explicit crops. Reusing the ID with identical bytes returns the existing job; different bytes returns 409. `GET /api/digitize/sessions/{sid}/jobs/{jid}` returns its full progress, quality, pages and receipt. `GET /api/digitize/sessions/{sid}` lists the collection's jobs and receipts.
+
+Files: `GET .../jobs/{jid}/files/original.jpg` (the returned job specifies the actual extension), `page-001/crop.png`, `page-001/scan.png`, `page-001/scan.pdf`, `page-001/text.txt`, `manifest.json`; `GET .../jobs/{jid}/archive` returns originals, attempts and metadata as ZIP. Relative file paths are confined to that job. Jobs use fresh attempt directories after restarts. The stable file aliases resolve the active attempt.
+
+Retries and review: `POST .../jobs/{jid}/retry` resumes failed processing; `POST .../jobs/{jid}/retry-export` retries the selected destination; `POST .../jobs/{jid}/review` records a manual quality acceptance. Version edits use `POST .../jobs/{jid}/pages/{pid}/versions` with `mode`, clockwise `rotation` in 90-degree steps, normalized `strokes`, `radius` and `ocr`. Crops and raw originals stay immutable.
+
+Keep UI wording consistent with the contract: accepted upload, successful OCR, local archive persistence and separate destination success are distinct facts. A spinner must remain while final persistence is pending. A failed export stays amber/red even when a local copy exists. Heuristic quality acceptance is not a claim of archival fidelity.

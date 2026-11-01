@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 122" role="img" aria-labelledby="title desc">
+  <title id="title">A vorne und B hinten: Kopf links, Spitze rechts</title>
+  <desc id="desc">Zwei schematische Schlüssel. Beim Wenden um die lange Achse bleibt die Spitze rechts; die Zähne wechseln von unten nach oben. Keine Spiegelung des Fotos.</desc>
+  <g fill="none" stroke="#236ea7" stroke-width="2" stroke-linejoin="round">
+    <path d="M15 29 H48 V39 H130 V49 H118 V55 H108 V49 H94 V55 H84 V49 H48 V65 H15 Z" fill="#e6f0f8"/>
+    <circle cx="30" cy="47" r="6"/>
+    <path d="M169 29 H202 V45 H238 V39 H248 V45 H262 V39 H272 V45 H284 V55 H202 V65 H169 Z" fill="#e6f0f8"/>
+    <circle cx="184" cy="47" r="6"/>
+    <path d="M139 37 Q151 25 161 39 M154 36 L161 39 L160 31"/>
+  </g>
+  <g font-family="Segoe UI,sans-serif" fill="#203f58" font-size="11">
+    <text x="15" y="17">A · Vorderseite</text><text x="169" y="17">B · Rückseite</text>
+    <text x="15" y="82">Kopf</text><text x="96" y="82">Spitze →</text>
+    <text x="169" y="82">Kopf</text><text x="250" y="82">Spitze →</text>
+    <text x="15" y="107">Längs wenden. Nicht spiegeln. Nacheinander fotografieren.</text>
+  </g>
+</svg>
