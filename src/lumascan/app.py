@@ -33,7 +33,7 @@ def create_app(root:Path,token=None,lan_hosts=(),phone_origin='http://127.0.0.1:
         if not tokenfile.exists():tokenfile.write_text(secrets.token_urlsafe(32),'utf-8')
         token=tokenfile.read_text('utf-8').strip()
     devices=Devices()
-    app=FastAPI(title='LumaScan',version=__version__,docs_url='/docs',redoc_url=None)
+    app=FastAPI(title='LumaScan',version=__version__,docs_url=None,redoc_url=None)
     app.state.root=root;app.state.devices=devices
     app.add_middleware(BodyLimit)
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=['localhost','127.0.0.1','testserver',*lan_hosts])
@@ -68,6 +68,8 @@ def create_app(root:Path,token=None,lan_hosts=(),phone_origin='http://127.0.0.1:
     install_devices(app,root,adapter,devices,phone_origin)
     @app.get('/')
     def index():return RedirectResponse('/scanner.html')
+    @app.get('/docs',include_in_schema=False)
+    def docs():return FileResponse(Path(__file__).with_name('static')/'api.html')
     @app.get('/api/node/capabilities')
     def capabilities():return {'id':'iamangusu.lumascan','version':__version__,'capabilities':['local-capture','multi-item-rectification','ocr','durable-queue','capture-receipts']}
     app.mount('/',StaticFiles(directory=Path(__file__).with_name('static'),html=True),name='ui')
